@@ -10,21 +10,69 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --navy: #0d1b2a;
-      --ink: #1a2e42;
       --gold: #c9a84c;
       --gold-light: #e8c97a;
-      --cream: #f5f0e8;
+      /* Dark theme (default) */
+      --bg: #0d1b2a;
+      --surface: #1a2e42;
+      --text: #f5f0e8;
       --muted: #8a9ab0;
+      --border: rgba(255,255,255,0.07);
+      --logo-filter: brightness(0) invert(1);
+      --logo-opacity: 0.9;
+      --grain-opacity: 0.35;
+      --line-opacity: 0.15;
+    }
+
+    /* Light theme via system preference */
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f5f0e8;
+        --surface: #e8e0d0;
+        --text: #0d1b2a;
+        --muted: #5a6e84;
+        --border: rgba(0,0,0,0.08);
+        --logo-filter: none;
+        --logo-opacity: 1;
+        --grain-opacity: 0.15;
+        --line-opacity: 0.25;
+      }
+    }
+
+    /* Light theme via manual toggle */
+    html.light {
+      --bg: #f5f0e8;
+      --surface: #e8e0d0;
+      --text: #0d1b2a;
+      --muted: #5a6e84;
+      --border: rgba(0,0,0,0.08);
+      --logo-filter: none;
+      --logo-opacity: 1;
+      --grain-opacity: 0.15;
+      --line-opacity: 0.25;
+    }
+
+    /* Dark theme via manual toggle (override system light) */
+    html.dark {
+      --bg: #0d1b2a;
+      --surface: #1a2e42;
+      --text: #f5f0e8;
+      --muted: #8a9ab0;
+      --border: rgba(255,255,255,0.07);
+      --logo-filter: brightness(0) invert(1);
+      --logo-opacity: 0.9;
+      --grain-opacity: 0.35;
+      --line-opacity: 0.15;
     }
 
     html, body {
       height: 100%;
-      background-color: var(--navy);
-      color: var(--cream);
+      background-color: var(--bg);
+      color: var(--text);
       font-family: 'DM Sans', sans-serif;
       font-weight: 300;
       overflow: hidden;
+      transition: background-color 0.4s ease, color 0.4s ease;
     }
 
     /* Subtle grain overlay */
@@ -33,9 +81,10 @@
       position: fixed;
       inset: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      opacity: 0.35;
+      opacity: var(--grain-opacity);
       pointer-events: none;
       z-index: 10;
+      transition: opacity 0.4s ease;
     }
 
     /* Diagonal accent line */
@@ -47,7 +96,8 @@
       width: 1px;
       height: 100vh;
       background: linear-gradient(to bottom, transparent, var(--gold) 30%, var(--gold) 70%, transparent);
-      opacity: 0.15;
+      opacity: var(--line-opacity);
+      transition: opacity 0.4s ease;
     }
 
     .container {
@@ -77,8 +127,9 @@
 
     .logo-wrap img {
       height: 52px;
-      filter: brightness(0) invert(1);
-      opacity: 0.9;
+      filter: var(--logo-filter);
+      opacity: var(--logo-opacity);
+      transition: filter 0.4s ease, opacity 0.4s ease;
     }
 
     .divider-v {
@@ -98,9 +149,15 @@
 
     .site-label strong {
       display: block;
-      color: var(--cream);
+      color: var(--text);
       font-weight: 500;
       letter-spacing: 0.18em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
 
     .badge {
@@ -110,7 +167,42 @@
       color: var(--gold);
       border: 1px solid rgba(201, 168, 76, 0.3);
       padding: 0.4rem 1rem;
-      margin-top: 0.25rem;
+    }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.3s, color 0.3s, background 0.3s;
+      flex-shrink: 0;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .theme-toggle svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Show sun icon in dark, moon in light */
+    .icon-moon { display: none; }
+    .icon-sun  { display: block; }
+    html.light .icon-moon { display: block; }
+    html.light .icon-sun  { display: none; }
+    @media (prefers-color-scheme: light) {
+      html:not(.dark) .icon-moon { display: block; }
+      html:not(.dark) .icon-sun  { display: none; }
     }
 
     /* HERO */
@@ -168,7 +260,7 @@
       align-items: center;
       justify-content: space-between;
       padding-top: 2rem;
-      border-top: 1px solid rgba(255,255,255,0.07);
+      border-top: 1px solid var(--border);
       animation: fadeUp 1.2s ease 0.4s both;
     }
 
@@ -181,7 +273,8 @@
 
     .footer-right {
       font-size: 0.68rem;
-      color: rgba(138,154,176,0.5);
+      color: var(--muted);
+      opacity: 0.5;
       letter-spacing: 0.1em;
     }
 
@@ -250,7 +343,22 @@
           Service du développement pédagogique
         </div>
       </div>
-      <div class="badge">equipetechno.github.io</div>
+      <div class="header-right">
+        <div class="badge">equipetechno.github.io</div>
+        <button class="theme-toggle" id="themeBtn" aria-label="Basculer le thème" title="Basculer clair / sombre">
+          <!-- Sun (shown in dark mode) -->
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <!-- Moon (shown in light mode) -->
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </div>
     </header>
 
     <main class="hero">
@@ -275,6 +383,28 @@
   </div>
 
   <div class="corner-deco"></div>
+
+  <script>
+    const btn = document.getElementById('themeBtn');
+    const html = document.documentElement;
+
+    // Detect system preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+    // On click: toggle between .light and .dark (overrides system)
+    btn.addEventListener('click', () => {
+      const isCurrentlyDark = html.classList.contains('dark') ||
+        (!html.classList.contains('light') && prefersDark.matches);
+
+      if (isCurrentlyDark) {
+        html.classList.remove('dark');
+        html.classList.add('light');
+      } else {
+        html.classList.remove('light');
+        html.classList.add('dark');
+      }
+    });
+  </script>
 
 </body>
 </html>
