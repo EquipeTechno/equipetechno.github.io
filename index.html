@@ -1,14 +1,280 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Basic HTML Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Équipe Techno — Cégep Gérald-Godin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy: #0d1b2a;
+      --ink: #1a2e42;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --cream: #f5f0e8;
+      --muted: #8a9ab0;
+    }
+
+    html, body {
+      height: 100%;
+      background-color: var(--navy);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow: hidden;
+    }
+
+    /* Subtle grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Diagonal accent line */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      right: 18vw;
+      width: 1px;
+      height: 100vh;
+      background: linear-gradient(to bottom, transparent, var(--gold) 30%, var(--gold) 70%, transparent);
+      opacity: 0.15;
+    }
+
+    .container {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      height: 100vh;
+      padding: clamp(2rem, 6vw, 5rem);
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* TOP BAR */
+    header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding-bottom: 2rem;
+      animation: fadeDown 1s ease both;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .logo-wrap img {
+      height: 52px;
+      filter: brightness(0) invert(1);
+      opacity: 0.9;
+    }
+
+    .divider-v {
+      width: 1px;
+      height: 40px;
+      background: var(--gold);
+      opacity: 0.5;
+    }
+
+    .site-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .site-label strong {
+      display: block;
+      color: var(--cream);
+      font-weight: 500;
+      letter-spacing: 0.18em;
+    }
+
+    .badge {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      padding: 0.4rem 1rem;
+      margin-top: 0.25rem;
+    }
+
+    /* HERO */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2rem;
+      animation: fadeUp 1.1s ease 0.2s both;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .eyebrow::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3.5rem, 8vw, 7.5rem);
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--cream);
+      max-width: 14ch;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .tagline {
+      font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+      color: var(--muted);
+      max-width: 48ch;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* FOOTER BAR */
+    footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      animation: fadeUp 1.2s ease 0.4s both;
+    }
+
+    .footer-left {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .footer-right {
+      font-size: 0.68rem;
+      color: rgba(138,154,176,0.5);
+      letter-spacing: 0.1em;
+    }
+
+    .dot-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0.4;
+      animation: pulse 3s ease-in-out infinite;
+    }
+    .dot:nth-child(2) { animation-delay: 0.5s; opacity: 0.25; }
+    .dot:nth-child(3) { animation-delay: 1s; opacity: 0.15; }
+
+    /* CORNER DECORATION */
+    .corner-deco {
+      position: fixed;
+      bottom: clamp(2rem, 5vw, 4rem);
+      right: clamp(2rem, 5vw, 4rem);
+      width: 100px;
+      height: 100px;
+      border-right: 1px solid rgba(201,168,76,0.15);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      pointer-events: none;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: inherit; }
+      50%       { transform: scale(1.6); opacity: 0.7; }
+    }
+
+    @media (max-width: 600px) {
+      html, body { overflow: auto; }
+      h1 { font-size: 3rem; }
+      footer { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      .badge { display: none; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Welcome to My Website2!</h1>
-    <p>This is a simple paragraph within the body of the HTML document image.</p>
 
-    <img src="Access.png" alt="Access logo" width="300">
+  <div class="container">
+
+    <header>
+      <div class="logo-wrap">
+        <img src="https://upload.wikimedia.org/wikipedia/fr/7/73/Logo-Cégep_Gérald-Godin.svg"
+             alt="Logo Cégep Gérald-Godin">
+        <div class="divider-v"></div>
+        <div class="site-label">
+          <strong>Équipe Techno</strong>
+          Service du développement pédagogique
+        </div>
+      </div>
+      <div class="badge">equipetechno.github.io</div>
+    </header>
+
+    <main class="hero">
+      <div class="eyebrow">Ressources pédagogiques</div>
+      <h1>Bienvenue sur <em>Équipe Techno</em></h1>
+      <p class="tagline">
+        Un espace de ressources conçu par le service du développement pédagogique
+        du Cégep Gérald-Godin. Le contenu est accessible à l'interne.
+      </p>
+      <div class="dot-row">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-left">Cégep Gérald-Godin &mdash; Développement pédagogique</div>
+      <div class="footer-right">&copy; 2025</div>
+    </footer>
+
+  </div>
+
+  <div class="corner-deco"></div>
+
 </body>
 </html>
